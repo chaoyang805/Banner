@@ -8,18 +8,18 @@
 
 import UIKit
 
-public class BannerView: UIView, UIScrollViewDelegate  {
+open class BannerView: UIView, UIScrollViewDelegate  {
     
     
-    private var timer: NSTimer!
-    private let MinimumTimeInterval = 1.5
+    private var timer: Timer!
+    private let minimumTimeInterval = 1.5
     
-    public var autoScroll = true
+    open var autoScroll = true
     
-    public var autoScrollTimeInterval = 1.5 {
+    open var autoScrollTimeInterval = 1.5 {
         didSet {
-            if autoScrollTimeInterval < MinimumTimeInterval {
-                autoScrollTimeInterval = MinimumTimeInterval
+            if autoScrollTimeInterval < minimumTimeInterval {
+                autoScrollTimeInterval = minimumTimeInterval
             }
             if autoScroll {
                 self.stopTimer()
@@ -28,18 +28,19 @@ public class BannerView: UIView, UIScrollViewDelegate  {
         }
     }
     
-    public var pageControlEnabled = true
-    public var pageIndicatorColor = UIColor.whiteColor()
-    public var currentPageIndicatorColor = UIColor.blueColor()
+    open var pageControlEnabled = true
+    open var pageIndicatorColor = UIColor.white
+    open var currentPageIndicatorColor = UIColor.blue
     
     private var pageControl: UIPageControl!
-    private func loadPageControl() -> UIPageControl{
+    
+    private func loadPageControl() -> UIPageControl {
         let pageControlHeight: CGFloat = 50
         let pageControl = UIPageControl(frame: CGRect(x: 0, y: self.height - 50, width: self.width, height: pageControlHeight))
         pageControl.numberOfPages = self.images.count - 2
         pageControl.currentPage = 0
-        pageControl.pageIndicatorTintColor = UIColor.redColor()
-        pageControl.currentPageIndicatorTintColor = UIColor.blueColor()
+        pageControl.pageIndicatorTintColor = UIColor.red
+        pageControl.currentPageIndicatorTintColor = UIColor.blue
         return pageControl
     }
     
@@ -48,19 +49,19 @@ public class BannerView: UIView, UIScrollViewDelegate  {
     private func loadScrollView() -> UIScrollView {
         let _scrollView = UIScrollView(frame: self.frame)
         
-        for (index, imageName) in self.images.enumerate() {
+        for (index, imageName) in self.images.enumerated() {
             let imageView = UIImageView(image: UIImage(named: imageName))
-            imageView.frame = CGRectMake(CGFloat(index) * self.width, self.frame.origin.y, self.width, self.height)
-            imageView.contentMode = .ScaleAspectFill
-            imageView.userInteractionEnabled = true
+            imageView.frame = CGRect(x: CGFloat(index) * self.width, y: self.frame.origin.y, width: self.width, height: self.height)
+            imageView.contentMode = .scaleAspectFill
+            imageView.isUserInteractionEnabled = true
             imageView.clipsToBounds = true
             _scrollView.addSubview(imageView)
         }
         
-        _scrollView.userInteractionEnabled = true
+        _scrollView.isUserInteractionEnabled = true
         _scrollView.delegate = self
-        _scrollView.pagingEnabled = true
-        _scrollView.scrollEnabled = true
+        _scrollView.isPagingEnabled = true
+        _scrollView.isScrollEnabled = true
         _scrollView.showsHorizontalScrollIndicator = false
         _scrollView.showsVerticalScrollIndicator = false
         _scrollView.contentSize = CGSize(width: self.width * CGFloat(self.images.count), height: self.height)
@@ -87,7 +88,7 @@ public class BannerView: UIView, UIScrollViewDelegate  {
     
     private func startTimer() {
         if timer == nil {
-            timer = NSTimer.scheduledTimerWithTimeInterval(autoScrollTimeInterval, target: self, selector: #selector(BannerView.scrollToNextPage), userInfo: nil, repeats: true)
+            timer = Timer.scheduledTimer(timeInterval: autoScrollTimeInterval, target: self, selector: #selector(BannerView.scrollToNextPage), userInfo: nil, repeats: true)
         }
     }
     
@@ -125,16 +126,16 @@ public class BannerView: UIView, UIScrollViewDelegate  {
         super.init(frame: frame)
     }
     
-    public func setBannerImages(imagesArray: [String]) {
+    open func setBannerImages(_ imagesArray: [String]) {
         var tempArray = [String]()
         tempArray.append(imagesArray.last!)
-        tempArray.appendContentsOf(imagesArray)
+        tempArray.append(contentsOf: imagesArray)
         tempArray.append(imagesArray.first!)
         self.images = tempArray
     }
     
     // MARK: UIScrollViewDelegate
-    public func scrollViewDidScroll(scrollView: UIScrollView) {
+    open func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offsetX = scrollView.contentOffset.x
         if offsetX == 0 {
             scrollView.contentOffset = CGPoint(x: width * CGFloat(images.count - 2), y: 0)
@@ -144,7 +145,7 @@ public class BannerView: UIView, UIScrollViewDelegate  {
         
     }
     
-    public func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+    open func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
 
         let currentPage = scrollView.contentOffset.x / width - 0.5
         if let pageControl = self.pageControl {
@@ -153,11 +154,11 @@ public class BannerView: UIView, UIScrollViewDelegate  {
         
     }
     
-    public func scrollViewWillBeginDragging(scrollView: UIScrollView) {
+    open func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         self.stopTimer()
     }
     
-    public func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    open func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         self.startTimer()
     }
     

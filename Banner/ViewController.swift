@@ -8,62 +8,82 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, JKBannerView1Delegate {
 
     var banner: BannerView!
+    var banner2: JKBannerView1!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        banner = BannerView(frame: self.view.frame)
-        banner.setBannerImages(["4.jpg","3.jpg","2.jpg","1.jpg","0.jpg"])
-        self.view.addSubview(banner)
         
-        
-        let button = UIButton(type: .System)
-        button.setTitle("改变图片", forState: .Normal)
-        button.addTarget(self, action: #selector(ViewController.changeBannerImages), forControlEvents: .TouchUpInside)
+
+        banner2 = JKBannerView1(imagesNamed: ["4.jpg","3.jpg","2.jpg","1.jpg","0.jpg"], frame: self.view.bounds)
+        banner2.delegate = self
+        self.view.addSubview(banner2!)
+
+        let button = UIButton(type: .system)
+        button.setTitle("改变图片", for: UIControlState())
+        button.addTarget(self, action: #selector(ViewController.changeBannerImages), for: .touchUpInside)
         button.frame = CGRect(x: 100, y: 100, width: 60, height: 40)
-        let addTimerButton = UIButton(type: .System)
-        addTimerButton.frame = CGRect(x: 100, y: 200, width: 80, height: 40)
-        addTimerButton.setTitle("addTimeInterval", forState: .Normal)
-        addTimerButton.addTarget(self, action: #selector(ViewController.addTimeInterval), forControlEvents: .TouchUpInside)
-        
-        let reduceButton = UIButton(type: .System)
-        reduceButton.frame = CGRect(x: 200, y: 200, width: 80, height: 40)
-        reduceButton.setTitle("reduceTimeInterval", forState: .Normal)
-        reduceButton.addTarget(self, action: #selector(ViewController.reduceTimeInterval), forControlEvents: .TouchUpInside)
-        self.view.addSubview(reduceButton)
-        self.view.addSubview(addTimerButton)
+        button.sizeToFit()
         self.view.addSubview(button)
+        
+        let addTimerButton = UIButton(type: .system)
+        addTimerButton.frame = CGRect(x: 80, y: 200, width: 80, height: 40)
+        addTimerButton.setTitle("addTimeInterval", for: UIControlState())
+        addTimerButton.addTarget(self, action: #selector(ViewController.addTimeInterval), for: .touchUpInside)
+        addTimerButton.sizeToFit()
+        self.view.addSubview(addTimerButton)
+
+        let reduceButton = UIButton(type: .system)
+        reduceButton.frame = CGRect(x: 200, y: 200, width: 80, height: 40)
+        reduceButton.setTitle("reduceTimeInterval", for: UIControlState())
+        reduceButton.addTarget(self, action: #selector(ViewController.reduceTimeInterval), for: .touchUpInside)
+        reduceButton.sizeToFit()
+        self.view.addSubview(reduceButton)
+        
     }
     
     var reverse = true
     
     func changeBannerImages() {
         if reverse {
-            banner.setBannerImages(["0.jpg","1.jpg","2.jpg","3.jpg"])
+            banner2.images = [
+                UIImage(named: "0.jpg")!,
+                UIImage(named: "1.jpg")!,
+                UIImage(named: "2.jpg")!,
+                UIImage(named: "3.jpg")!
+            ]
             reverse = false
         } else {
-            banner.setBannerImages(["4.jpg","3.jpg","2.jpg","1.jpg","0.jpg"])
+
+            banner2.images = [
+                UIImage(named: "4.jpg")!,
+                UIImage(named: "3.jpg")!,
+                UIImage(named: "2.jpg")!,
+                UIImage(named: "1.jpg")!,
+                UIImage(named: "0.jpg")!
+            ]
             reverse = true
         }
     }
     
     func addTimeInterval() {
-        banner.autoScrollTimeInterval += 1.0
+        banner2.autoScrollTimeInterval += 1.0
+        
     }
     
     func reduceTimeInterval() {
-        banner.autoScrollTimeInterval -= 1.0
+        banner2.autoScrollTimeInterval -= 1.0
+    }
+    
+    // MARK: JKBannerViewDelegate
+    
+    func bannerView(_ bannerView: JKBannerView1!, tappedAt index: UInt) {
+        NSLog("tapped index \(index)")
     }
     
     
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
 
 }
 
